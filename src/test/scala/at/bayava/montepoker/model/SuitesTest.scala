@@ -1,13 +1,12 @@
 package at.bayava.montepoker.model
 
+import at.bayava.montepoker.BaseTest
 import at.bayava.montepoker.model.Suites._
-import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{FunSpec, Matchers}
 
 /**
 	* Created by philba on 5/22/17.
 	*/
-class SuitesTest extends FunSpec with Matchers with TableDrivenPropertyChecks {
+class SuitesTest extends BaseTest {
 
 	describe("Suites") {
 		val suites = Table(("string", "suite"),
