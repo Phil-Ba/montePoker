@@ -5,4 +5,3 @@ jdk:
   - oraclejdk8
 notifications:
   email: false
-script: "./travis.sh"
