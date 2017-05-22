@@ -5,18 +5,18 @@ package at.bayava.montepoker.model
 	*/
 object CardValues {
 
-	sealed trait CardValue extends Ordered[CardValue] {
+	sealed trait CardValue {
 		def value: Int
-
-		override def toString: String = getClass.getSimpleName
 	}
 
-	sealed class BaseCardValue(i: Int, s: String) extends CardValue {
+	sealed class BaseCardValue(i: Int, s: String) extends CardValue with Ordered[BaseCardValue] {
 		def matches(s: String): Boolean = this.s == s
 
 		override def value: Int = i
 
-		override def compare(that: CardValue): Int = value compareTo that.value
+		//		override def compare(x: BaseCardValue,y: BaseCardValue): Int = x.value compareTo y.value
+
+		override def compare(that: BaseCardValue): Int = value compareTo that.value
 	}
 
 	object Ace extends BaseCardValue(14, "A")
@@ -46,14 +46,8 @@ object CardValues {
 	object Two extends BaseCardValue(2, "2")
 
 
-	private val cardValues = initSubclasses
-
-	private def initSubclasses = {
-		import scala.reflect.runtime.{universe => ru}
-		val tpe = ru.typeOf[BaseCardValue]
-		val clazz = tpe.typeSymbol.asClass
-		clazz.knownDirectSubclasses.map(_.asInstanceOf[BaseCardValue])
-	}
+	private val cardValues: Seq[BaseCardValue] = Seq(Ace, King, Queen, Jack, Ten, Nine, Eight, Seven, Six,
+		Five, Four, Three, Two)
 
 	def apply(s: String): CardValue = {
 		cardValues.find(_.matches(s)).get
