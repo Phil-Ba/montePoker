@@ -9,6 +9,11 @@ class ClReader extends StrictLogging {
 
 	def parse(line: String) = {
 		logger.debug("Parsing input {}", line)
+		val splitInput = line split " "
+		require(splitInput.length == 4)
+
+
+
 	}
 
 }
