@@ -5,7 +5,7 @@ package at.bayava.montepoker.model
 	*/
 object Suites extends Enumeration {
 
-	val Suite = Value
+	type Suite = Value
 
 	val Clubs = Value("C")
 
