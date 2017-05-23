@@ -6,7 +6,7 @@ scalaVersion := "2.12.2"
 
 resolvers += Resolver.mavenLocal
 
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.3.5")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.0")
 
 val versionLog4j2 = "2.8.2"
 
