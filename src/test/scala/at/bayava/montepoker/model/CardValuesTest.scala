@@ -20,7 +20,7 @@ class CardValuesTest extends BaseTest {
 		)
 		forEvery(values) { (s, cardValue) =>
 			it(s"should return $cardValue for input '$s'") {
-				CardValues(s) shouldBe cardValue
+				CardValues.withName(s) shouldBe cardValue
 			}
 		}
 

@@ -3,24 +3,16 @@ package at.bayava.montepoker.model
 /**
 	* Created by philba on 5/22/17.
 	*/
-object Suites {
+object Suites extends Enumeration {
 
-	sealed trait Suite {
-		override def toString: String = getClass.getSimpleName
-	}
+	val Suite = Value
 
-	object Clubs extends Suite
+	val Clubs = Value("C")
 
-	object Diamonds extends Suite
+	val Diamonds = Value("D")
 
-	object Hearts extends Suite
+	val Hearts = Value("H")
 
-	object Spades extends Suite
+	val Spades = Value("S")
 
-	def apply(s: String): Suite = s match {
-		case "C" => Clubs
-		case "D" => Diamonds
-		case "H" => Hearts
-		case "S" => Spades
-	}
 }

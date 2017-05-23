@@ -2,6 +2,7 @@ package at.bayava.montepoker.model
 
 import at.bayava.montepoker.BaseTest
 import at.bayava.montepoker.model.Suites._
+import org.scalatest.Suites
 
 /**
 	* Created by philba on 5/22/17.
@@ -15,9 +16,9 @@ class SuitesTest extends BaseTest {
 			("H", Hearts),
 			("S", Spades)
 		)
-		forEvery(suites) { (s: String, suite: Suite) =>
+		forEvery(suites) { (s, suite) =>
 			it(s"should return $suite for input $s") {
-				Suites(s) shouldBe suite
+				Suites.withName(s) shouldBe suite
 			}
 		}
 	}
