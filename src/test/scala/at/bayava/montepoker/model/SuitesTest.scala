@@ -2,7 +2,6 @@ package at.bayava.montepoker.model
 
 import at.bayava.montepoker.BaseTest
 import at.bayava.montepoker.model.Suites._
-import org.scalatest.Suites
 
 /**
 	* Created by philba on 5/22/17.
