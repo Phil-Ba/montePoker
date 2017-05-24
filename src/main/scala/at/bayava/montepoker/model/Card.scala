@@ -3,8 +3,8 @@ package at.bayava.montepoker.model
 /**
 	* Created by philba on 5/22/17.
 	*/
-case class Card(value: CardValues.Value, suite: Suites.Value) {
-
+case class Card(value: CardValues.Value, suite: Suites.Value) extends Ordered[Card] {
+	override def compare(that: Card): Int = value compareTo that.value
 }
 
 object Card {
