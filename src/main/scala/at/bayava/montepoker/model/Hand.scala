@@ -6,7 +6,6 @@ package at.bayava.montepoker.model
 class Hand(val cards: Seq[Card]) {
 	def +(card: Card*): Hand = new Hand(cards ++ card)
 
-
 	def -(card: Card*): Hand = new Hand(cards diff card)
 
 	def --(card: Hand.Pair*): Hand = new Hand(cards diff card)
