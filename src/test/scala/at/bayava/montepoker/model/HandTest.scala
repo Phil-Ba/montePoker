@@ -25,6 +25,13 @@ class HandTest extends BaseGenTest {
 				}
 				}
 			}
+
+			it("should return an empty list if no duplicates") {
+				forAll(handOfNGenNoDuplicates(5)) { np => {
+					np.pairs shouldBe empty
+				}
+				}
+			}
 		}
 	}
 
