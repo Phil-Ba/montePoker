@@ -58,11 +58,6 @@ object CardGens {
 		.values
 		.max == 1)
 
-	val nOfCardsGenNoDuplicates2: (Int) => Gen[Seq[Card]]#WithFilter = nOfCardsGen(_: Int).withFilter(_.groupBy(_.value)
-		.mapValues(_.length)
-		.values
-		.max == 1)
-
 	val handOfNGen: (Int) => Gen[Hand] = nOfCardsGen(_: Int).map(new Hand(_))
 
 	val handOfNGenNoDuplicates: (Int) => Gen[Hand] = nOfCardsGenNoDuplicates(_: Int).map(new Hand(_))
