@@ -20,52 +20,52 @@ trait BaseGenTest extends FunSpec with Matchers with GeneratorDrivenPropertyChec
 
 object CardGens {
 
-	val cardStack = for {
+	val cardStack: Seq[Card] = for {
 		cv <- CardValues.values.toSeq
 		cs <- Suites.values.toSeq
 	} yield {
 		Card(cv, cs)
 	}
 
-	val cardValueGen = Gen.oneOf(
+	val cardValueGen: Gen[(String, CardValues.Value)] = Gen.oneOf(
 		((2 to 10).map(_.toString) :+ "J" :+ "Q" :+ "K" :+ "A")
 			.map(cv => (cv, CardValues.withName(cv)))
 	)
 
-	val cardSuitGen = Gen.oneOf(
+	val cardSuitGen: Gen[(String, Suites.Value)] = Gen.oneOf(
 		("C" :: "D" :: "H" :: "S" :: Nil)
 			.map(cs => (cs, Suites.withName(cs)))
 	)
 
-	val cardGen = for {
+	val cardGen: Gen[(String, String, Card)] = for {
 		cv <- cardValueGen
 		cs <- cardSuitGen
 	} yield {
-		Card(cv._2, cs._2)
+		(cv._1, cs._1, Card(cv._2, cs._2))
 	}
 
-	val pairGen = (for {
+	val pairGen: Gen[(Card, Card)] = (for {
 		c <- cardGen
 		s <- cardSuitGen
 	} yield {
-		(c, new Card(c.value, s._2))
+		(c._3, new Card(c._3.value, s._2))
 	}) suchThat (cp => cp._1.suite != cp._2.suite)
 
-	val nOfCardsGen = Gen.pick(_: Int, Random.shuffle(cardStack))
+	val nOfCardsGen: (Int) => Gen[Seq[Card]] = Gen.pick(_: Int, Random.shuffle(cardStack))
 
-	val nOfCardsGenNoDuplicates = nOfCardsGen(_: Int) suchThat (_.groupBy(_.value)
+	val nOfCardsGenNoDuplicates: (Int) => Gen[Seq[Card]] = nOfCardsGen(_: Int) suchThat (_.groupBy(_.value)
 		.mapValues(_.length)
 		.values
 		.max == 1)
 
-	val nOfCardsGenNoDuplicates2 = nOfCardsGen(_: Int).withFilter(_.groupBy(_.value)
+	val nOfCardsGenNoDuplicates2: (Int) => Gen[Seq[Card]]#WithFilter = nOfCardsGen(_: Int).withFilter(_.groupBy(_.value)
 		.mapValues(_.length)
 		.values
 		.max == 1)
 
-	val handOfNGen = nOfCardsGen(_: Int).map(new Hand(_))
+	val handOfNGen: (Int) => Gen[Hand] = nOfCardsGen(_: Int).map(new Hand(_))
 
-	val handOfNGenNoDuplicates = nOfCardsGenNoDuplicates(_: Int).map(new Hand(_))
+	val handOfNGenNoDuplicates: (Int) => Gen[Hand] = nOfCardsGenNoDuplicates(_: Int).map(new Hand(_))
 
-	val handGen = handOfNGen(5)
+	val handGen: Gen[Hand] = handOfNGen(5)
 }
