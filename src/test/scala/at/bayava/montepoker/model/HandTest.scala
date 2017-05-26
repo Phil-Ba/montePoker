@@ -9,6 +9,8 @@ import org.scalacheck.Gen
 	*/
 class HandTest extends BaseGenTest {
 
+	val hand = handGen
+
 	describe("Hand") {
 		it("apply should create the right hand") {
 			val cards = Gen.listOfN(5, cardGen)
@@ -18,6 +20,10 @@ class HandTest extends BaseGenTest {
 				Hand(cards.map(c => c._1 + c._2).mkString(" ")).cards should contain theSameElementsAs cardList
 			}
 			}
+		}
+
+		it("highcard should return the maximum value") {
+			forAll(hand) { hand => hand.highCard.value shouldBe hand.cards.maxBy(_.value).value }
 		}
 
 		describe("pairs") {
