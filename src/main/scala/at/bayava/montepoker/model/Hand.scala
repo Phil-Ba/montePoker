@@ -8,7 +8,7 @@ class Hand(val cards: Seq[Card]) {
 
 	def -(card: Card*): Hand = new Hand(cards diff card)
 
-	def --(card: Hand.Pair*): Hand = new Hand(cards diff card)
+	def --(pairs: Hand.Pair*): Hand = this - (pairs.flatMap(t => Seq(t._1, t._2)): _*)
 
 	def highCard: Card = cards.max
 
