@@ -2,30 +2,14 @@ package at.bayava.montepoker.model
 
 import at.bayava.montepoker.model.Hand.PairOrdering
 
-import scala.annotation.tailrec
-
 /**
 	*
 	*/
 object PokerHands {
 
-
 	trait PokerHand[T <: PokerHand[T]] extends Ordered[T] {
 		self: T =>
 		val hand: Hand
-
-		@tailrec
-		final def compareByHighCard2(h1: Hand, h2: Hand): Int = {
-			if (h1.cards.isEmpty || h2.cards.isEmpty) {
-				return 0
-			}
-			val h1HighCard = h1.highCard
-			val h2HighCard = h2.highCard
-			h1HighCard compareTo h2HighCard match {
-				case 0 => compareByHighCard2(h1 - h1HighCard, h2 - h2HighCard)
-				case i => i
-			}
-		}
 
 		def compareByHighCard(that: Hand): Int = PokerHand.compareByHighCard(this.hand, that)
 	}
