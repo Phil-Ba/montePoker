@@ -2,6 +2,7 @@ package at.bayava.montepoker.model
 
 import at.bayava.montepoker.BaseGenTest
 import at.bayava.montepoker.CardGens._
+import org.scalacheck.Gen
 
 /**
 	*
@@ -9,6 +10,16 @@ import at.bayava.montepoker.CardGens._
 class HandTest extends BaseGenTest {
 
 	describe("Hand") {
+		it("apply should create the right hand") {
+			val cards = Gen.listOfN(5, cardGen)
+
+			forAll(cards) { cards => {
+				val cardList = cards.map(_._3)
+				Hand(cards.map(c => c._1 + c._2).mkString(" ")).cards should contain theSameElementsAs cardList
+			}
+			}
+		}
+
 		describe("pairs") {
 			it("should return the existing pair") {
 				val pairHand = for {
