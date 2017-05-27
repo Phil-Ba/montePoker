@@ -1,7 +1,7 @@
 package at.bayava.montepoker.model
 
 import at.bayava.montepoker.CardGens._
-import at.bayava.montepoker.model.PokerHands.{HighCard, Pair, PokerHand}
+import at.bayava.montepoker.model.PokerHands.{HighCard, Pair, PokerHand, TwoPair}
 import at.bayava.montepoker.{BaseGenTest, BaseTest}
 
 import scala.util.Random
@@ -40,6 +40,7 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 			}
 		}
 
+		//HIGHCARD
 		describe("The HighCard class") {
 			describe("unapply") {
 				it(s"should return some for all hands") {
@@ -51,6 +52,7 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 			}
 		}
 
+		//PAIR
 		describe("The pair class") {
 			describe("unapply method") {
 				it("should return Some for all hands containing a pair") {
@@ -105,5 +107,32 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 				}
 			}
 		}
+
+		//TWOPAIR
+		describe("The TwoPair class") {
+			it("unapply method should return None if hand doesnt contain 2 pairs") {
+				forAll(handGen) { h =>
+					whenever(h.pairs.size < 2) {
+						TwoPair.unapply(h) shouldBe empty
+					}
+				}
+			}
+			it("unapply method should return Some if hand contains 2 pairs") {
+				forAll(pairGen, pairGen, simpleCardGen) { (p1, p2, c) =>
+					whenever(p1._1.value != p2._1.value && c.value != p1._1.value && c.value != p2._1.value) {
+						val (p11, p12) = p1
+						val (p21, p22) = p2
+						val params = Random.shuffle(Seq(p11, p12, p21, p22, c))
+
+						val result = TwoPair.unapply(new Hand(params))
+
+						result should not be empty
+						result.get.pairs.map(_._1.value) should contain allElementsOf Seq(p1, p2).map(_._1.value)
+					}
+				}
+			}
+
+		}
+
 	}
 }
