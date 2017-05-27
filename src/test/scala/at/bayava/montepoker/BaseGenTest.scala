@@ -11,6 +11,7 @@ import scala.util.Random
 	* Created by philba on 5/22/17.
 	*/
 trait BaseGenTest extends FunSpec with Matchers with GeneratorDrivenPropertyChecks {
+	//	implicit override val generatorDrivenConfig =		new PropertyCheckConfiguration(maxDiscardedFactor = 10.0)
 
 	implicit val noShrinkHand: Shrink[Hand] = Shrink.shrinkAny
 	implicit val noShrinkSeqCard: Shrink[Seq[Card]] = Shrink.shrinkAny
@@ -47,10 +48,10 @@ object CardGens {
 	val simpleCardGen: Gen[Card] = cardGen.map(_._3)
 
 	val pairGen: Gen[(Card, Card)] = (for {
-		c <- cardGen
+		c <- simpleCardGen
 		s <- cardSuitGen
 	} yield {
-		(c._3, new Card(c._3.value, s._2))
+		(c, new Card(c.value, s._2))
 	}) suchThat (cp => cp._1.suite != cp._2.suite)
 
 	val nOfCardsGen: (Int) => Gen[Seq[Card]] = Gen.pick(_: Int, Random.shuffle(cardStack))
@@ -62,14 +63,21 @@ object CardGens {
 
 	val handOfNGen: (Int) => Gen[Hand] = nOfCardsGen(_: Int).map(new Hand(_))
 
+	def handOfNGenNoDuplicatesWithoutValues(n: Int, value: CardValues.Value*): Gen[Hand] = {
+		val reducedStack = Random.shuffle(cardStack)
+			.groupBy(_.value)
+			.map(_._2.head)
+			.filterNot(c => value.contains(c.value))
+		Gen.pick(n, reducedStack).map(new Hand(_))
+	}
+
 	val handOfNGenNoDuplicates: (Int) => Gen[Hand] = nOfCardsGenNoDuplicates(_: Int).map(new Hand(_))
 
 	val handGen: Gen[Hand] = handOfNGen(5)
 
 	val pairHand: Gen[(Hand, (Card, Card))] = for {
 		p <- pairGen
-		h <- handOfNGenNoDuplicates(3)
-		if h.cards.forall(_.value != p._1.value)
+		h <- handOfNGenNoDuplicatesWithoutValues(3, p._1.value)
 	} yield {
 		(h + p._1 + p._2, p)
 	}
