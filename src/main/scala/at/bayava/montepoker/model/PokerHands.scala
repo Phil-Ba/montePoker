@@ -62,7 +62,7 @@ object PokerHands {
 	object TwoPair {
 		def unapply(arg: Hand): Option[TwoPair] = {
 			arg.pairs match {
-				case a@(_ :: _ :: Nil) => Some(new TwoPair(arg, a.toSeq))
+				case a@(_ :: _ :: _) => Some(new TwoPair(arg, a.toSeq))
 				case _ => None
 			}
 		}
