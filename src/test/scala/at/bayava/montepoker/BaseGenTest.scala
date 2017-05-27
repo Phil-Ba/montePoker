@@ -63,4 +63,12 @@ object CardGens {
 	val handOfNGenNoDuplicates: (Int) => Gen[Hand] = nOfCardsGenNoDuplicates(_: Int).map(new Hand(_))
 
 	val handGen: Gen[Hand] = handOfNGen(5)
+
+	val pairHand: Gen[(Hand, (Card, Card))] = for {
+		p <- pairGen
+		h <- handOfNGenNoDuplicates(3)
+		if h.cards.forall(_.value != p._1.value)
+	} yield {
+		(h + p._1 + p._2, p)
+	}
 }

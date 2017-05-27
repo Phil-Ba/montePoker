@@ -12,13 +12,6 @@ import scala.util.Random
 class HandTest extends BaseGenTest {
 
 	val hand = handGen
-	val pairHand = for {
-		p <- pairGen
-		h <- handOfNGenNoDuplicates(3)
-		if h.cards.forall(_.value != p._1.value)
-	} yield {
-		(h + p._1 + p._2, p)
-	}
 
 	describe("Hand") {
 		it("apply should create the right hand") {
