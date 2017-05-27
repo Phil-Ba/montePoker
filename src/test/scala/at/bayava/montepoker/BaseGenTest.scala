@@ -44,6 +44,8 @@ object CardGens {
 		(cv._1, cs._1, Card(cv._2, cs._2))
 	}
 
+	val simpleCardGen: Gen[Card] = cardGen.map(_._3)
+
 	val pairGen: Gen[(Card, Card)] = (for {
 		c <- cardGen
 		s <- cardSuitGen

@@ -4,6 +4,8 @@ import at.bayava.montepoker.CardGens._
 import at.bayava.montepoker.model.PokerHands.{HighCard, Pair, PokerHand}
 import at.bayava.montepoker.{BaseGenTest, BaseTest}
 
+import scala.util.Random
+
 /**
 	*
 	*/
@@ -88,8 +90,20 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 						}
 					}
 				}
+				it("and then by the highest card") {
+					forAll(pairGen, simpleCardGen, simpleCardGen, simpleCardGen, simpleCardGen) { (pair, c1, c2, c3, c4) =>
+						whenever(c3 < c4) {
+							val params1 = Random.shuffle(Seq(pair._1, pair._2, c1, c2, c3))
+							val params2 = Random.shuffle(Seq(pair._1, pair._2, c1, c2, c4))
+							val lowPair = new Pair(new Hand(params1), pair)
+							val highPair = new Pair(new Hand(params2), pair)
+
+							lowPair compareTo highPair shouldBe -1
+							highPair compareTo lowPair shouldBe 1
+						}
+					}
+				}
 			}
 		}
-
 	}
 }
