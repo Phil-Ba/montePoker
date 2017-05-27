@@ -73,6 +73,22 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 					}
 				}
 			}
+
+			describe("the compare method") {
+				it("should compare first by the highest pair") {
+					forAll(pairHand, pairHand) { (ph1, ph2) =>
+						whenever(ph1._2._1.value != ph2._2._1.value) {
+							val p1 = ph1._2
+							val p2 = ph2._2
+							val expected = p1._1 compareTo p2._1
+
+							val result = new Pair(ph1._1, ph1._2) compareTo new Pair(ph2._1, ph2._2)
+
+							result shouldBe expected
+						}
+					}
+				}
+			}
 		}
 
 	}
