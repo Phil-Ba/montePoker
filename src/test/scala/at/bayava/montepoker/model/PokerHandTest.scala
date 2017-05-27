@@ -63,6 +63,15 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 					}
 					}
 				}
+				it("should return None for all hands not containing a pair") {
+					forAll(handOfNGenNoDuplicates(5)) { nph => {
+
+						val result = Pair.unapply(nph)
+
+						result shouldBe empty
+					}
+					}
+				}
 			}
 		}
 
