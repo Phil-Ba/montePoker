@@ -5,7 +5,6 @@ jdk:
   - oraclejdk8
 notifications:
   email: false
-
 script:
   - sbt clean coverage test
 after_success:
