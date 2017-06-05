@@ -28,6 +28,10 @@ object CardGens {
 		Card(cv, cs)
 	}
 
+	val nUniqueValues = Gen.pick(_: Int, Random.shuffle(CardValues.values.toIterable))
+
+	val nUniqueSuites = Gen.pick(_: Int, Random.shuffle(Suites.values.toIterable))
+
 	val cardValueGen: Gen[(String, CardValues.Value)] = Gen.oneOf(
 		((2 to 10).map(_.toString) :+ "J" :+ "Q" :+ "K" :+ "A")
 			.map(cv => (cv, CardValues.withName(cv)))

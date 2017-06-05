@@ -131,6 +131,11 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 					}
 				}
 			}
+			describe("compare method") {
+				it("should pick the highest pair when all ") {
+
+				}
+			}
 
 		}
 
