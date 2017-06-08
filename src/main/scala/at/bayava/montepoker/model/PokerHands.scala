@@ -39,6 +39,26 @@ object PokerHands {
 		}
 	}
 
+	class ThreeOfAKind(val hand: Hand, val triple: Hand.Triple) extends PokerHand[ThreeOfAKind] {
+		override def compare(that: ThreeOfAKind): Int = {
+			???
+		}
+
+	}
+
+	object ThreeOfAKind {
+		def unapply(arg: Hand): Option[ThreeOfAKind] = {
+			arg.cards
+				.groupBy(_.value)
+				.filter(_._2.length == 3)
+				.values
+			match {
+				case (x :: xs :: xss :: Nil) :: _ => Some(new ThreeOfAKind(arg, (x, xs, xss)))
+				case _ => None
+			}
+		}
+	}
+
 	class TwoPair(val hand: Hand, val pairs: Seq[Hand.Pair]) extends PokerHand[TwoPair] {
 		override def compare(that: TwoPair): Int = {
 			firstNotEqual(() => this.pairs.max compareTo that.pairs.max,

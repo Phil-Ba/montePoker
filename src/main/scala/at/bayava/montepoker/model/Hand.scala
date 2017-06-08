@@ -25,6 +25,7 @@ class Hand(val cards: Seq[Card]) {
 object Hand {
 	private val cardRegex = "\\w{1,2}[CDHS]".r
 	type Pair = (Card, Card)
+	type Triple = (Card, Card, Card)
 
 	def apply(s: String): Hand = {
 		val cards = cardRegex.findAllIn(s)
