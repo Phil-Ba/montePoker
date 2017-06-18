@@ -41,7 +41,14 @@ object PokerHands {
 
 	class ThreeOfAKind(val hand: Hand, val triple: Hand.Triple) extends PokerHand[ThreeOfAKind] {
 		override def compare(that: ThreeOfAKind): Int = {
-			???
+			val result = this.triple compare that.triple
+			if (result != 0) {
+				result
+			} else {
+				val thisNoTriple = this.hand - (this.triple.productIterator.map { case c: Card => c }.toList: _*)
+				val thatNoTriple = that.hand - (that.triple.productIterator.map { case c: Card => c }.toList: _*)
+				PokerHand.compareByHighCard(thisNoTriple, thatNoTriple)
+			}
 		}
 
 	}
@@ -52,9 +59,10 @@ object PokerHands {
 				.groupBy(_.value)
 				.filter(_._2.length == 3)
 				.values
+				.toSeq
 			match {
-				case (x :: xs :: xss :: Nil) :: _ => Some(new ThreeOfAKind(arg, (x, xs, xss)))
-				case _ => None
+				case Seq(Seq(x, xs, xss)) => Some(new ThreeOfAKind(arg, (x, xs, xss)))
+				case x: Any => println(x); None;
 			}
 		}
 	}
