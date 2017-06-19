@@ -6,11 +6,13 @@ package at.bayava.montepoker.model
 class Hand(val cards: Seq[Card]) {
 	def +(card: Card): Hand = new Hand(card +: cards)
 
-	def ++(card: Iterable[Card]): Hand = new Hand(cards ++ card)
+	def ++(card: Card*): Hand = new Hand(cards ++ card)
 
-	def -(card: Card*): Hand = new Hand(cards diff card)
+	def -(card: Card): Hand = new Hand(cards diff Seq(card))
 
-	def --(pairs: Hand.Pair*): Hand = this - (pairs.flatMap(t => Seq(t._1, t._2)): _*)
+	def --(cards: Card*): Hand = new Hand(this.cards.diff(cards.toSeq))
+
+	def ---(pairs: Hand.Pair*): Hand = this --(pairs.flatMap(t => Seq(t._1, t._2)):_*)
 
 	def highCard: Card = cards.max
 

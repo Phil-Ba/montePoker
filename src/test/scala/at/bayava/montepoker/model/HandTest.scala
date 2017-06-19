@@ -64,7 +64,7 @@ class HandTest extends BaseGenTest {
 				val hand = ph._1
 				val pair = ph._2
 
-				val result = hand -- pair
+				val result = hand --- pair
 
 				result.cards should have size (hand.cards.length - 2)
 				result.cards should not contain pair._1

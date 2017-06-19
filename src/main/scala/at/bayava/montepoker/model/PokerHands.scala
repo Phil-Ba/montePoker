@@ -45,8 +45,8 @@ object PokerHands {
 			if (result != 0) {
 				result
 			} else {
-				val thisNoTriple = this.hand - (this.triple.productIterator.map { case c: Card => c }.toList: _*)
-				val thatNoTriple = that.hand - (that.triple.productIterator.map { case c: Card => c }.toList: _*)
+				val thisNoTriple = this.hand -- (this.triple.productIterator.map { case c: Card => c }.toSeq: _*)
+				val thatNoTriple = that.hand -- (that.triple.productIterator.map { case c: Card => c }.toSeq: _*)
 				PokerHand.compareByHighCard(thisNoTriple, thatNoTriple)
 			}
 		}
@@ -72,7 +72,7 @@ object PokerHands {
 			firstNotEqual(() => this.pairs.max compareTo that.pairs.max,
 				() => this.pairs.min compareTo that.pairs.min) match {
 				case Some(r) => r
-				case None => PokerHand.compareByHighCard(this.hand -- (this.pairs: _*), that.hand -- (that.pairs: _*))
+				case None => PokerHand.compareByHighCard(this.hand --- (this.pairs:_*), that.hand --- (that.pairs:_*))
 			}
 		}
 
@@ -100,7 +100,7 @@ object PokerHands {
 	class Pair(val hand: Hand, val pair: Hand.Pair) extends PokerHand[Pair] {
 		override def compare(that: Pair): Int = {
 			this.pair._1 compareTo that.pair._1 match {
-				case 0 => PokerHand.compareByHighCard(this.hand -- this.pair, that.hand -- that.pair)
+				case 0 => PokerHand.compareByHighCard(this.hand --- this.pair, that.hand --- that.pair)
 				case i => i
 			}
 		}
