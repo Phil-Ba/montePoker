@@ -1,7 +1,7 @@
 package at.bayava.montepoker.model
 
 import at.bayava.montepoker.CardGens._
-import at.bayava.montepoker.model.PokerHands.{HighCard, Pair, PokerHand, TwoPair}
+import at.bayava.montepoker.model.PokerHands.{HighCard, Pair, PokerHand, ThreeOfAKind, TwoPair}
 import at.bayava.montepoker.{BaseGenTest, BaseTest}
 
 import scala.util.Random
@@ -63,7 +63,7 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 						val result = Pair.unapply(hand)
 
 						result should not be empty
-						result.get.pair shouldBe pair
+						result.get.pair.productIterator.toSeq should contain theSameElementsAs pair.productIterator.toSeq
 					}
 					}
 				}
@@ -136,8 +136,18 @@ class PokerHandTest extends BaseTest with BaseGenTest {
 
 				}
 			}
-
 		}
 
+		//THREE OF A KIND
+		describe("Three of a kind") {
+			it("unapply method should return Some if hand contains a triple") {
+				forAll(tripleHandGen) { (triple) =>
+
+					val result = ThreeOfAKind.unapply(triple)
+
+					result should not be empty
+				}
+			}
+	}
 	}
 }
