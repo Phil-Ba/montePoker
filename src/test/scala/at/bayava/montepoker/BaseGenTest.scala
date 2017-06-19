@@ -51,29 +51,37 @@ object CardGens {
 
 	val simpleCardGen: Gen[Card] = cardGen.map(_._3)
 
-	val pairGen: Gen[(Card, Card)] = (for {
-		c <- simpleCardGen
-		s <- cardSuitGen
+	val tripleHandGen: Gen[Hand] = for {
+		suites <- nUniqueSuites(3)
+		value <- nUniqueValues(1)
+		remainingHand <- nCardsGenNoDuplicatesWithoutValues(2, value.head)
 	} yield {
-		(c, new Card(c.value, s._2))
-	}) suchThat (cp => cp._1.suite != cp._2.suite)
+		val tripleCards = for (s <- suites) yield Card(value.head, s)
+		new Hand(Random.shuffle(tripleCards ++ remainingHand))
+	}
+
+	val pairGen: Gen[(Card, Card)] = for {
+		cv <- cardValueGen
+		s <- nUniqueSuites(2)
+	} yield {
+		(new Card(cv._2, s.head), new Card(cv._2, s.last))
+	}
 
 	val nOfCardsGen: (Int) => Gen[Seq[Card]] = Gen.pick(_: Int, Random.shuffle(cardStack))
 
-	val nOfCardsGenNoDuplicates: (Int) => Gen[Seq[Card]] = nOfCardsGen(_: Int) suchThat (_.groupBy(_.value)
-		.mapValues(_.length)
-		.values
-		.max == 1)
+	def nCardsGenNoDuplicatesWithoutValues(n: Int, value: CardValues.Value*): Gen[Seq[Card]] = {
+		val reducedStack = Random.shuffle(cardStack)
+			.filterNot(c => value.contains(c.value))
+			.groupBy(_.value)
+			.map(_._2.head)
+		Gen.pick(n, reducedStack)
+	}
+
+	val nOfCardsGenNoDuplicates: (Int) => Gen[Seq[Card]] = nCardsGenNoDuplicatesWithoutValues(_: Int)
 
 	val handOfNGen: (Int) => Gen[Hand] = nOfCardsGen(_: Int).map(new Hand(_))
 
-	def handOfNGenNoDuplicatesWithoutValues(n: Int, value: CardValues.Value*): Gen[Hand] = {
-		val reducedStack = Random.shuffle(cardStack)
-			.groupBy(_.value)
-			.map(_._2.head)
-			.filterNot(c => value.contains(c.value))
-		Gen.pick(n, reducedStack).map(new Hand(_))
-	}
+	def handOfNGenNoDuplicatesWithoutValues(n: Int, value: CardValues.Value*): Gen[Hand] = nCardsGenNoDuplicatesWithoutValues(n, value: _*).map(new Hand(_))
 
 	val handOfNGenNoDuplicates: (Int) => Gen[Hand] = nOfCardsGenNoDuplicates(_: Int).map(new Hand(_))
 
