@@ -81,7 +81,7 @@ class HandTest extends BaseGenTest {
 			it("should return the existing pair") {
 				forAll(pairHand) { ph => {
 					val pairs = ph._1.pairs
-					pairs should contain(ph._2)
+					pairs should contain oneOf(ph._2, ph._2.swap)
 				}
 				}
 			}
